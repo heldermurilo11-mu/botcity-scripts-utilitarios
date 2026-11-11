@@ -1,0 +1,36 @@
+# Credenciais e Segredos locais
+.env
+.env.local
+.env.*
+!.env.example
+credentials/
+
+# Artefatos sensiveis, descobertas e relatorios gerados
+*.csv
+*discovery*.json
+XML*
+output_task_*.json
+output/
+*.log
+
+# Docker
+.docker_data/
+
+# Caches do Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Ambientes Virtuais
+venv/
+.venv/
+env/
+ENV/
+
+# IDEs e Sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

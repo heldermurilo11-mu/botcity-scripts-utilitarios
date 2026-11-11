@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BotCity Sidekick | Scripts Úteis</title>
+    
+    <!-- Fontes Modernas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- PrismJS para realce de sintaxe -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    
+    <style>
+        /* CSS Reset e Variáveis de Design */
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(20, 27, 45, 0.7);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --card-border-hover: rgba(16, 185, 129, 0.4);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent: #10b981; /* Verde esmeralda elegante */
+            --accent-hover: #059669;
+            --font-sans: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 40%);
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Layout Grid Principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Header */
+        header {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 1.5rem;
+        }
+
+        .header-title h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .badge-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+
+        /* Sidebar de Parâmetros */
+        .sidebar {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1.5rem;
+            padding: 1.75rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 0.75rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input, .form-group select {
+            background: rgba(10, 15, 26, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        /* Grid de Scripts (Bento Layout) */
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .script-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            backdrop-filter: blur(12px);
+            transition: var(--transition-smooth);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .script-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .script-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--card-border-hover);
+            box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.08);
+        }
+
+        .script-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .card-title h3 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.35rem;
+        }
+
+        .card-title p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Botões */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border-radius: 0.75rem;
+            padding: 0.6rem 1rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            outline: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border: 1px solid transparent;
+            color: #0b0f19;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-secondary);
+        }
+
+        /* Visualização de Código */
+        .code-container {
+            position: relative;
+            background: rgba(7, 10, 19, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .code-container pre {
+            margin: 0 !important;
+            padding: 1.5rem !important;
+            background: transparent !important;
+            max-height: 400px;
+            overflow: auto;
+        }
+
+        .code-container code {
+            font-family: var(--font-mono) !important;
+            font-size: 0.875rem !important;
+            line-height: 1.6 !important;
+        }
+
+        /* Sobrescrever estilo do Prism amanhã */
+        .token.comment { color: #6b7280 !important; }
+        .token.keyword { color: #f472b6 !important; }
+        .token.string { color: #34d399 !important; }
+        .token.function { color: #60a5fa !important; }
+        .token.number { color: #f59e0b !important; }
+
+        /* Rodapé */
+        footer {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--card-border);
+            padding-top: 1.5rem;
+            margin-top: auto;
+        }
+
+        /* Notificação de Copiado */
+        .copied-tooltip {
+            position: absolute;
+            background: var(--accent);
+            color: #0b0f19;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            top: -30px;
+            right: 0;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: var(--transition-smooth);
+            pointer-events: none;
+        }
+
+        .copied-tooltip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>BotCity Sidekick</h1>
+            <p>Scripts Python rápidos e utilitários para acelerar o gerenciamento do Orchestrator.</p>
+        </div>
+        <div class="badge-status">
+            <span class="status-dot"></span>
+            <span>Pronto para Reuso</span>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- Sidebar de Parâmetros -->
+        <aside class="sidebar">
+            <h2>Configurações</h2>
+            
+            <div class="form-group">
+                <label for="param-task-id">Task ID</label>
+                <input type="text" id="param-task-id" value="123456" placeholder="Ex: 123456">
+            </div>
+
+            <div class="form-group">
+                <label for="param-status">Status de Destino</label>
+                <select id="param-status">
+                    <option value="FAILED" selected>FAILED (Interrompido)</option>
+                    <option value="SUCCESS">SUCCESS (Sucesso)</option>
+                    <option value="PARTIALLY_COMPLETED">PARTIALLY_COMPLETED</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="param-message">Mensagem de Encerramento</label>
+                <input type="text" id="param-message" value="Encerrado via API a pedido do usuario." placeholder="Ex: Erro no processamento">
+            </div>
+
+            <div class="form-group">
+                <label for="param-datapool">Label do Datapool</label>
+                <input type="text" id="param-datapool" value="MEU_DATAPOOL" placeholder="Ex: MEU_DATAPOOL">
+            </div>
+
+            <div class="form-group">
+                <label for="param-datapool-item">Dados do Item (JSON)</label>
+                <input type="text" id="param-datapool-item" value='{"key1": "value1", "key2": "value2"}' placeholder='Ex: {"cpf": "123"}'>
+            </div>
+            
+            <div class="form-group">
+                <label for="param-alert-title">Título do Alerta</label>
+                <input type="text" id="param-alert-title" value="Instância Travada" placeholder="Ex: Erro Crítico">
+            </div>
+
+            <div class="form-group">
+                <label for="param-alert-type">Tipo de Alerta</label>
+                <select id="param-alert-type">
+                    <option value="ERROR" selected>ERROR</option>
+                    <option value="WARN">WARN</option>
+                    <option value="INFO">INFO</option>
+                </select>
+            </div>
+        </aside>
+
+        <!-- Área de Conteúdo Grid de Scripts -->
+        <main class="scripts-grid">
+            
+            <!-- CARD 1: Finalizar Task (SDK) -->
+            <article class="script-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3>Encerrar Tarefa Travada (SDK)</h3>
+                        <p>Finaliza uma tarefa que ficou em loop ou travada no Maestro usando o SDK Python nativo.</p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary btn-copy" data-target="code-finish-sdk">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <span>Copiar</span>
+                        </button>
+                        <button class="btn btn-primary btn-download" data-filename="encerrar_task.py" data-target="code-finish-sdk">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <span>Baixar</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="code-container">
+                    <pre><code class="language-python" id="code-finish-sdk">from botcity.maestro import BotMaestroSDK, AutomationTaskFinishStatus
+
+# Inicializa o SDK usando as variaveis do arquivo .env
+maestro = BotMaestroSDK.from_sys_args()
+
+# Se estiver testando localmente sem argumentos de linha de comando:
+# maestro = BotMaestroSDK(
+#     server="https://developers.botcity.dev", 
+#     login="seu-login-maestro", 
+#     key="sua-chave-maestro"
+# )
+# maestro.login()
+
+task_id = "[TASK_ID]"
+
+print(f"Finalizando task {task_id} no Maestro...")
+maestro.finish_task(
+    task_id=task_id,
+    status=AutomationTaskFinishStatus.[STATUS],
+    message="[MESSAGE]"
+)
+print("Executado com sucesso!")</code></pre>
+                </div>
+            </article>
+
+            <!-- CARD 2: Consultar Detalhes da Task (API REST) -->
+            <article class="script-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3>Consultar Status da Tarefa (REST API)</h3>
+                        <p>Faz uma chamada HTTP direta para a API do Orchestrator para ler os metadados atuais de uma tarefa.</p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary btn-copy" data-target="code-get-task">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <span>Copiar</span>
+                        </button>
+                        <button class="btn btn-primary btn-download" data-filename="status_task.py" data-target="code-get-task">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <span>Baixar</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="code-container">
+                    <pre><code class="language-python" id="code-get-task">import os
+import requests
+
+# Tenta carregar credenciais do .env
+server = os.getenv("BOTCITY_SERVER", "developers.botcity.dev")
+if not server.startswith("http"):
+    server = f"https://{server}"
+
+login = os.getenv("BOTCITY_LOGIN")
+key = os.getenv("BOTCITY_KEY")
+workspace = os.getenv("BOTCITY_WORKSPACE", login)
+
+# 1. Login para adquirir JWT Token
+login_url = f"{server}/api/v2/workspace/{workspace}/login"
+print(f"Efetuando login em {login_url}...")
+response = requests.post(login_url, json={"login": login, "key": key})
+response.raise_for_status()
+token = response.json()["accessToken"]
+
+# 2. Consultar dados da Tarefa
+task_id = "[TASK_ID]"
+task_url = f"{server}/api/v2/task/{task_id}"
+headers = {
+    "Authorization": f"Bearer {token}",
+    "organization": workspace
+}
+
+print(f"Requisitando dados da task {task_id}...")
+task_resp = requests.get(task_url, headers=headers)
+task_resp.raise_for_status()
+
+task_data = task_resp.json()
+print("\n--- Informacoes da Tarefa ---")
+print(f"ID: {task_data.get('id')}")
+print(f"Status: {task_data.get('status')}")
+print(f"Atividade: {task_data.get('activityId')}")
+print(f"Mensagem: {task_data.get('finishMessage')}")
+print(f"Data de Criacao: {task_data.get('creationDate')}")</code></pre>
+                </div>
+            </article>
+
+            <!-- CARD 3: Enviar Item para o Datapool (SDK) -->
+            <article class="script-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3>Inserir Item no Datapool (SDK)</h3>
+                        <p>Adiciona programaticamente um novo item a uma fila de processamento (datapool) existente no Maestro.</p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary btn-copy" data-target="code-post-datapool">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <span>Copiar</span>
+                        </button>
+                        <button class="btn btn-primary btn-download" data-filename="inserir_datapool.py" data-target="code-post-datapool">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <span>Baixar</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="code-container">
+                    <pre><code class="language-python" id="code-post-datapool">from botcity.maestro import BotMaestroSDK
+
+# Inicializa o SDK usando as variaveis do arquivo .env
+maestro = BotMaestroSDK.from_sys_args()
+
+datapool_label = "[DATAPOOL_LABEL]"
+item_values = [DATAPOOL_ITEM]
+
+print(f"Inserindo item no Datapool '{datapool_label}'...")
+item = maestro.create_datapool_item(
+    datapool_label=datapool_label,
+    values=item_values
+)
+
+if item:
+    print(f"Item inserido com sucesso! ID no Maestro: {item.id}")
+else:
+    print("Falha ao criar o item no Datapool.")</code></pre>
+                </div>
+            </article>
+
+            <!-- CARD 4: Disparar Alerta (SDK) -->
+            <article class="script-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3>Disparar Alerta no Painel (SDK)</h3>
+                        <p>Envia uma notificação visual (Info, Warn, Error) vinculada a uma execução de tarefa específica.</p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary btn-copy" data-target="code-send-alert">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <span>Copiar</span>
+                        </button>
+                        <button class="btn btn-primary btn-download" data-filename="enviar_alerta.py" data-target="code-send-alert">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <span>Baixar</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="code-container">
+                    <pre><code class="language-python" id="code-send-alert">from botcity.maestro import BotMaestroSDK, AlertType
+
+# Inicializa o SDK usando as variaveis do arquivo .env
+maestro = BotMaestroSDK.from_sys_args()
+
+task_id = "[TASK_ID]"
+
+print("Enviando alerta ao Maestro...")
+maestro.alert(
+    task_id=task_id,
+    title="[ALERT_TITLE]",
+    message="[MESSAGE]",
+    alert_type=AlertType.[ALERT_TYPE]
+)
+print("Alerta registrado!")</code></pre>
+                </div>
+            </article>
+
+            <!-- CARD 5: Upload de Arquivos (SDK) -->
+            <article class="script-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3>Fazer Upload de Artefato (SDK)</h3>
+                        <p>Faz upload de relatórios, prints ou planilhas geradas pelo bot diretamente para a aba "Result Files" da tarefa.</p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary btn-copy" data-target="code-upload-artifact">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <span>Copiar</span>
+                        </button>
+                        <button class="btn btn-primary btn-download" data-filename="upload_artefato.py" data-target="code-upload-artifact">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <span>Baixar</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="code-container">
+                    <pre><code class="language-python" id="code-upload-artifact">from botcity.maestro import BotMaestroSDK
+
+# Inicializa o SDK usando as variaveis do arquivo .env
+maestro = BotMaestroSDK.from_sys_args()
+
+task_id = "[TASK_ID]"
+nome_no_maestro = "relatorio_execucao.xlsx"
+caminho_do_arquivo = "./output/relatorio_execucao.xlsx"
+
+print(f"Fazendo upload de '{caminho_do_arquivo}' como '{nome_no_maestro}' para a task {task_id}...")
+try:
+    maestro.post_artifact(
+        task_id=task_id,
+        artifact_name=nome_no_maestro,
+        filepath=caminho_do_arquivo
+    )
+    print("Upload realizado com sucesso!")
+except Exception as e:
+    print(f"Erro ao realizar upload: {e}")</code></pre>
+                </div>
+            </article>
+
+        </main>
+    </div>
+
+    <footer>
+        <p>BotCity Sidekick &copy; 2026. Desenvolvido para facilitar o dia a dia do desenvolvedor de automações.</p>
+    </footer>
+
+    <!-- PrismJS para realce de sintaxe -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+    <script>
+        // Modelos de scripts originais para substituição dinámica
+        const templates = {
+            'code-finish-sdk': `from botcity.maestro import BotMaestroSDK, AutomationTaskFinishStatus
+
+# Inicializa o SDK usando as variaveis do arquivo .env
+maestro = BotMaestroSDK.from_sys_args()
+
+# Se estiver testando localmente sem argumentos de linha de comando:
+# maestro = BotMaestroSDK(
+#     server="https://developers.botcity.dev", 
+#     login="seu-login-maestro", 
+#     key="sua-chave-maestro"
+# )
+# maestro.login()
+
+task_id = "[TASK_ID]"
+
+print(f"Finalizando task {task_id} no Maestro...")
+maestro.finish_task(
+    task_id=task_id,
+    status=AutomationTaskFinishStatus.[STATUS],
+    message="[MESSAGE]"
+)
+print("Executado com sucesso!")`,
+
+            'code-get-task': `import os
+import requests
+
+# Tenta carregar credenciais do .env
+server = os.getenv("BOTCITY_SERVER", "developers.botcity.dev")
+if not server.startswith("http"):
+    server = f"https://{server}"
+
+login = os.getenv("BOTCITY_LOGIN")
+key = os.getenv("BOTCITY_KEY")
+workspace = os.getenv("BOTCITY_WORKSPACE", login)
+
+# 1. Login para adquirir JWT Token
+login_url = f"{server}/api/v2/workspace/{workspace}/login"
+print(f"Efetuando login em {login_url}...")
+response = requests.post(login_url, json={"login": login, "key": key})
+response.raise_for_status()
+token = response.json()["accessToken"]
+
+# 2. Consultar dados da Tarefa
+task_id = "[TASK_ID]"
+task_url = f"{server}/api/v2/task/{task_id}"
+headers = {
+    "Authorization": f"Bearer {token}",
+    "organization": workspace
+}
+
+print(f"Requisitando dados da task {task_id}...")
+task_resp = requests.get(task_url, headers=headers)
+task_resp.raise_for_status()
+
+task_data = task_resp.json()
+print("\\n--- Informacoes da Tarefa ---")
+print(f"ID: {task_data.get('id')}")
+print(f"Status: {task_data.get('status')}")
+print(f"Atividade: {task_data.get('activityId')}")
+print(f"Mensagem: {task_data.get('finishMessage')}")
+print(f"Data de Criacao: {task_data.get('creationDate')}")`,
+
+            'code-post-datapool': `from botcity.maestro import BotMaestroSDK
+
+# Inicializa o SDK usando as variaveis do arquivo .env
+maestro = BotMaestroSDK.from_sys_args()
+
+datapool_label = "[DATAPOOL_LABEL]"
+item_values = [DATAPOOL_ITEM]
+
+print(f"Inserindo item no Datapool '{datapool_label}'...")
+item = maestro.create_datapool_item(
+    datapool_label=datapool_label,
+    values=item_values
+)
+
+if item:
+    print(f"Item inserido com sucesso! ID no Maestro: {item.id}")
+else:
+    print("Falha ao criar o item no Datapool.")`,
+
+            'code-send-alert': `from botcity.maestro import BotMaestroSDK, AlertType
+
+# Inicializa o SDK usando as variaveis do arquivo .env
+maestro = BotMaestroSDK.from_sys_args()
+
+task_id = "[TASK_ID]"
+
+print("Enviando alerta ao Maestro...")
+maestro.alert(
+    task_id=task_id,
+    title="[ALERT_TITLE]",
+    message="[MESSAGE]",
+    alert_type=AlertType.[ALERT_TYPE]
+)
+print("Alerta registrado!")`,
+
+            'code-upload-artifact': `from botcity.maestro import BotMaestroSDK
+
+# Inicializa o SDK usando as variaveis do arquivo .env
+maestro = BotMaestroSDK.from_sys_args()
+
+task_id = "[TASK_ID]"
+nome_no_maestro = "relatorio_execucao.xlsx"
+caminho_do_arquivo = "./output/relatorio_execucao.xlsx"
+
+print(f"Fazendo upload de '{caminho_do_arquivo}' como '{nome_no_maestro}' para a task {task_id}...")
+try:
+    maestro.post_artifact(
+        task_id=task_id,
+        artifact_name=nome_no_maestro,
+        filepath=caminho_do_arquivo
+    )
+    print("Upload realizado com sucesso!")
+except Exception as e:
+    print(f"Erro ao realizar upload: {e}")`
+        };
+
+        // Elementos dos parâmetros do formulário
+        const inputs = {
+            taskId: document.getElementById('param-task-id'),
+            status: document.getElementById('param-status'),
+            message: document.getElementById('param-message'),
+            datapool: document.getElementById('param-datapool'),
+            datapoolItem: document.getElementById('param-datapool-item'),
+            alertTitle: document.getElementById('param-alert-title'),
+            alertType: document.getElementById('param-alert-type')
+        };
+
+        // Atualizar os códigos com os valores atuais dos parâmetros
+        function updateCodes() {
+            const values = {
+                taskId: inputs.taskId.value || '123456',
+                status: inputs.status.value,
+                message: inputs.message.value || 'Tarefa finalizada.',
+                datapool: inputs.datapool.value || 'MEU_DATAPOOL',
+                datapoolItem: inputs.datapoolItem.value || '{}',
+                alertTitle: inputs.alertTitle.value || 'Alerta',
+                alertType: inputs.alertType.value
+            };
+
+            for (const id in templates) {
+                let code = templates[id];
+                code = code.replaceAll('[TASK_ID]', values.taskId);
+                code = code.replaceAll('[STATUS]', values.status);
+                code = code.replaceAll('[MESSAGE]', values.message);
+                code = code.replaceAll('[DATAPOOL_LABEL]', values.datapool);
+                code = code.replaceAll('[DATAPOOL_ITEM]', values.datapoolItem);
+                code = code.replaceAll('[ALERT_TITLE]', values.alertTitle);
+                code = code.replaceAll('[ALERT_TYPE]', values.alertType);
+
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = code;
+                    // Forçar Prism a recolorir o bloco de código
+                    Prism.highlightElement(element);
+                }
+            }
+        }
+
+        // Ligar listeners de eventos para atualização em tempo real
+        for (const key in inputs) {
+            inputs[key].addEventListener('input', updateCodes);
+        }
+
+        // Eventos de Copiar Código
+        document.querySelectorAll('.btn-copy').forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                const targetElement = document.getElementById(targetId);
+                if (!targetElement) return;
+
+                navigator.clipboard.writeText(targetElement.textContent).then(() => {
+                    // Feedback visual
+                    const span = button.querySelector('span');
+                    const originalText = span.textContent;
+                    
+                    // Mudar texto
+                    span.textContent = 'Copiado!';
+                    button.style.borderColor = 'var(--accent)';
+                    button.style.color = 'var(--accent)';
+
+                    setTimeout(() => {
+                        span.textContent = originalText;
+                        button.style.borderColor = '';
+                        button.style.color = '';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Erro ao copiar código:', err);
+                });
+            });
+        });
+
+        // Eventos de Download de Código
+        document.querySelectorAll('.btn-download').forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                const filename = button.getAttribute('data-filename');
+                const targetElement = document.getElementById(targetId);
+                if (!targetElement) return;
+
+                const codeText = targetElement.textContent;
+                const blob = new Blob([codeText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                
+                // Cleanup
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        });
+
+        // Executar atualização inicial
+        updateCodes();
+    </script>
+</body>
+</html>
