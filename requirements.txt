@@ -1,0 +1,4 @@
+botcity-maestro-sdk
+python-dotenv
+pandas
+requests

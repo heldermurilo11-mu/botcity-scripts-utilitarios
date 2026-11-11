@@ -1,0 +1,18 @@
+services:
+  botcity-utils:
+    build: .
+    image: botcity-utils:latest
+    volumes:
+      - .:/app
+      - ./output:/app/output
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+    # A imagem oficial da BotCity pode ter configurações de ambiente específicas
+    # que o SDK aproveita automaticamente.
+    environment:
+      - BOTCITY_SERVER=${BOTCITY_SERVER}
+      - BOTCITY_LOGIN=${BOTCITY_LOGIN}
+      - BOTCITY_KEY=${BOTCITY_KEY}
+      - BOTCITY_WORKSPACE=${BOTCITY_WORKSPACE:-}
